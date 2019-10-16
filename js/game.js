@@ -56,10 +56,8 @@ gameScene.update = function () {
     //check for active pointer 
     if(this.input.keyboard.checkDown(cursors.space, 5000)) {
         this.i ++;
-        this.money += this.i;
+        money(this.i);
         console.log("i: " + this.i);
-        console.log("Moneyz: " + this.money);
-        this.moneyString.setText("Moneyz: " + this.money);
         this.text.setText(this.strings[this.i]);       
     }
     // get option text to show up on the correct index
@@ -67,16 +65,14 @@ gameScene.update = function () {
         // create the text and set it so it can be interacted with
         var option1 = text("hunt gorillas",0,50).setInteractive();
         var option2 = text("farm",500,50).setInteractive();
-        option1.on('pointerdown',function(pointer){
+        option1.on('pointerdown', function(pointer){
             console.log('clicked option one');
-            this.money = 100;
-            console.log("Moneyz: " + this.money);
+            money(100);
             this.i ++;
         });
         option2.on('pointerdown',function(pointer){
             console.log('clicked option 2');
-            this.money += 3;
-            console.log("Moneyz: " + this.money);
+            money(3);
             this.i ++;
         });
     }
@@ -89,7 +85,14 @@ function text(string,x,y){
         return gameScene.add.text(x,y,string,gameScene.style);
     }
     return gameScene.add.text(0,config.height/2-10,string,gameScene.style);
+}
 
+//function for adding money
+function money(sum){
+    gameScene.money += sum
+    console.log("Moniez: " + gameScene.money);
+    gameScene.moneyString.setText("Moneyz: " + gameScene.money);
+    return gameScene.money;
 }
 
 //The maximum is inclusive and the minimum is inclusive 
