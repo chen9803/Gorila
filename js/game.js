@@ -1,5 +1,9 @@
 // create a new scene
 let gameScene = new Phaser.Scene('Game');
+// extra variables
+// counter for text
+var i = 0;
+// check for options being visible
 var createdText = false;
 // ============= (1) init ===================
 // init is the first function that is called. 
@@ -19,7 +23,7 @@ gameScene.init = function (){
     // style for all the text in the game and get it to wrap around the screen
     this.style = { font: '20pt Arial', fill: 'white', align: 'left', wordWrap:{width: config.width, useAdvancedWrap: true}};
     console.log(this.style);
-    this.i = 0;
+    
 //    this.timer = game.time.create(1000, false);
 };
 
@@ -45,7 +49,7 @@ gameScene.create = function () {
     // change the sprite origin to the top-left corner
     this.bg.setOrigin(0,0);
     this.moneyString = gameScene.add.text(0,config.height-30,"Moneyz: " + this.money,this.style);
-    this.text = gameScene.add.text(0,0,this.strings[this.i], this.style);
+    this.text = gameScene.add.text(0,0,this.strings[i], this.style);
 };
 
 // ============ (4) update ==================
@@ -55,25 +59,33 @@ gameScene.update = function () {
     game.input.enabled = true;
     //check for active pointer 
     if(this.input.keyboard.checkDown(cursors.space, 5000)) {
-        this.i ++;
-        money(this.i);
-        console.log("i: " + this.i);
-        this.text.setText(this.strings[this.i]);       
+        i ++;
+        money(i);
+        console.log("i: " + i);
+        this.text.setText(this.strings[i]);       
     }
     // get option text to show up on the correct index
-    if(this.i == 4){
+    if(i == 4){
         // create the text and set it so it can be interacted with
-        var option1 = text("hunt gorillas",0,50).setInteractive();
+        createdText = true;
+        // var option1 = text("hunt gorillas",0,50).setInteractive();
+        var option1 = this.add.text(x,y,string,this.style).setInteractive();
         var option2 = text("farm",500,50).setInteractive();
         option1.on('pointerdown', function(pointer){
             console.log('clicked option one');
             money(100);
-            this.i ++;
+            i ++;
+            option1.destroy();
+            option2.destroy();
+            createdText = false;
+            console.log(createdText);
         });
         option2.on('pointerdown',function(pointer){
             console.log('clicked option 2');
             money(3);
-            this.i ++;
+            i ++;
+            option1.destroy();
+            option2.destroy();
         });
     }
 
@@ -87,15 +99,14 @@ function text(string,x,y){
     return gameScene.add.text(0,config.height/2-10,string,gameScene.style);
 }
 
-//function for adding money
+// function for adding money
 function money(sum){
     gameScene.money += sum
     console.log("Moniez: " + gameScene.money);
     gameScene.moneyString.setText("Moneyz: " + gameScene.money);
     return gameScene.money;
 }
-
-//The maximum is inclusive and the minimum is inclusive 
+// The maximum is inclusive and the minimum is inclusive 
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
