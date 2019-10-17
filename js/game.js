@@ -1,11 +1,13 @@
 // create a new scene
 let gameScene = new Phaser.Scene('Game');
-var snatched = ['false','false','false'];
+
 // extra variables
 // counter for text
 var i = 0;
 // check for options being visible
 var createdText = false;
+var option1;
+var option2;
 // ============= (1) init ===================
 // init is the first function that is called. 
 // Initiate certain variables or objects for your scene here. 
@@ -52,23 +54,32 @@ gameScene.create = function () {
     this.bg.setOrigin(0,0);
     this.moneyString = gameScene.add.text(0,config.height-30,"Moneyz: " + this.money,this.style);
     this.text = gameScene.add.text(0,0,this.strings[i], this.style);
-    for (let i = 0; i < 3; i++){
-        let trap = this.add.sprite(5,5,'enemy');
-        trap.depth = 2;
-        trap.setInteractive();
-        trap.on('pointerdown', function(pointer){
-            alert('snached');
-            snatched[i] = true;
-        });
-        this.traps.push(trap);
-    }
-    console.log(this.traps);
+
+    /*
+    // show and remove stuff
+    // Set text to pause game & hide it
+    pauseGameText = this.add.text(200, 200, 'Game Paused',{ fontFamily: 'Arial', fontSize: 64, color: '#fff'}).setVisible(false);
+
+    // Set the depth to 1
+    pauseGameText.setDepth(1);
+    */
+
 };
 
 // ============ (4) update ==================
 // After setup is complete, update is called on a loop 
 // for each frame during game play.
 gameScene.update = function () {  
+    /*
+    // Pause game by pressing spacebar & resume by pressing shift
+    if(cursors.space.isDown){
+        // this.physics.pause();
+        pauseGameText.setVisible(true);
+        } else if (cursors.shift.isDown){
+        // this.physics.resume();
+        pauseGameText.setVisible(false);
+        }
+        */
     game.input.enabled = true;
     //check for active pointer 
     if(this.input.keyboard.checkDown(cursors.space, 5000)) {
@@ -78,36 +89,38 @@ gameScene.update = function () {
         this.text.setText(this.strings[i]);       
     }
 
-    for(let i = 0; i < 10; i++){
-        if(snatched[i]){
-            this.traps[i].destroy;
-        }
-    }
-    console.log(snatched);
-
     // get option text to show up on the correct index
     if(i == 4){
+        console.log('option1: ' + option1);
         // create the text and set it so it can be interacted with
-        createdText = true;
-        var option1 = text("hunt gorillas",0,50).setInteractive();
-        // var option1 = this.add.text(x,y,string,this.style).setInteractive();
-        var option2 = text("farm",500,50).setInteractive();
-        option1.on('pointerdown', function(pointer){
-            console.log('clicked option one');
-            money(100);
-            i ++;
-            option1.destroy();
-            option2.destroy();
-            createdText = false;
-            console.log(createdText);
-        });
-        option2.on('pointerdown',function(pointer){
-            console.log('clicked option 2');
-            money(3);
-            i ++;
-            option1.destroy();
-            option2.destroy();
-        });
+        if(typeof option1 == 'undefined' && typeof option2 == 'undefined'){
+            console.log('added the text');
+            createdText = true;
+            option1 = text("hunt gorillas",0,50).setVisible(true).setInteractive();
+            option1.setDepth(1);
+            
+            option2 = text("farm",500,50).setInteractive();
+            option2.setVisible(true);
+            option2.setDepth(1);
+        }
+        if(typeof option1 !== 'undefined' && typeof option2 !== 'undefined'){
+            option1.on('pointerdown', function(pointer){
+                console.log('clicked option one');
+                money(100);
+                i ++;
+                option1.setVisible(false);
+                option2.setVisible(false);
+                createdText = false;
+                console.log(createdText);
+            });
+            option2.on('pointerdown',function(pointer){
+                console.log('clicked option 2');
+                money(3);
+                i ++;
+                option1.setVisible(false);
+                option2.setVisible(false);
+            });
+        }
     }
 
 };
