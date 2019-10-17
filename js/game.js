@@ -103,22 +103,32 @@ gameScene.update = function () {
             option2.setVisible(true);
             option2.setDepth(1);
         }
-        if(typeof option1 !== 'undefined' && typeof option2 !== 'undefined'){
+        if(typeof option1 !== 'undefined' && typeof option2 !== 'undefined' && i == 4){
             option1.on('pointerdown', function(pointer){
-                console.log('clicked option one');
-                money(100);
-                i ++;
-                option1.setVisible(false);
-                option2.setVisible(false);
-                createdText = false;
-                console.log(createdText);
+                if(i == 4){
+                    console.log('clicked option one');
+                    money(100);
+                    i ++;
+                    console.log(i);
+                    option1.setVisible(false);
+                    option2.setVisible(false);
+                    createdText = false;
+                    // has to use gameScene.strings because this would refer to the text because we are inside the text reference
+                    gameScene.text.setText(gameScene.strings[i]);
+                }
             });
             option2.on('pointerdown',function(pointer){
-                console.log('clicked option 2');
-                money(3);
-                i ++;
-                option1.setVisible(false);
-                option2.setVisible(false);
+                if(i == 4){
+                    console.log('clicked option 2');
+                    money(3);
+                    i ++;
+                    console.log(i);
+                    option1.setVisible(false);
+                    option2.setVisible(false);
+                    createdText = false;
+                    // has to use gameScene.strings because this would refer to the text because we are inside the text reference
+                    gameScene.text.setText(gameScene.strings[i]);  
+                }
             });
         }
     }
