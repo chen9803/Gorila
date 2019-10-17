@@ -1,6 +1,16 @@
 // create a new scene
 let gameScene = new Phaser.Scene('Game');
+<<<<<<< HEAD
+=======
+
+// extra variables
+// counter for text
+var i = 0;
+// check for options being visible
+>>>>>>> c7429af0fa64f0776416306a317eb0937da4803d
 var createdText = false;
+var option1;
+var option2;
 // ============= (1) init ===================
 // init is the first function that is called. 
 // Initiate certain variables or objects for your scene here. 
@@ -47,19 +57,44 @@ gameScene.create = function () {
     // change the sprite origin to the top-left corner
     this.bg.setOrigin(0,0);
     this.moneyString = gameScene.add.text(0,config.height-30,"Moneyz: " + this.money,this.style);
+<<<<<<< HEAD
     this.text = gameScene.add.text(0,0,this.strings[this.i], this.style);
     this.familyHealthString = gameScene.add.text(config.width-250,config.height-30,"Family Health: " + this.familyHealth,this.style);
     this.familyDeadString = gameScene.add.text(0,config.height-300,"Your family is dead", this.bigStyle);
     this.familyDeadString.setVisible(false);
+=======
+    this.text = gameScene.add.text(0,0,this.strings[i], this.style);
+
+    /*
+    // show and remove stuff
+    // Set text to pause game & hide it
+    pauseGameText = this.add.text(200, 200, 'Game Paused',{ fontFamily: 'Arial', fontSize: 64, color: '#fff'}).setVisible(false);
+
+    // Set the depth to 1
+    pauseGameText.setDepth(1);
+    */
+
+>>>>>>> c7429af0fa64f0776416306a317eb0937da4803d
 };
 
 // ============ (4) update ==================
 // After setup is complete, update is called on a loop 
 // for each frame during game play.
 gameScene.update = function () {  
+    /*
+    // Pause game by pressing spacebar & resume by pressing shift
+    if(cursors.space.isDown){
+        // this.physics.pause();
+        pauseGameText.setVisible(true);
+        } else if (cursors.shift.isDown){
+        // this.physics.resume();
+        pauseGameText.setVisible(false);
+        }
+        */
     game.input.enabled = true;
     //check for active pointer 
     if(this.input.keyboard.checkDown(cursors.space, 5000)) {
+<<<<<<< HEAD
         this.i ++;
         this.money += this.i;
         console.log("i: " + this.i);
@@ -93,6 +128,46 @@ gameScene.update = function () {
     })}
     if(this.familyHealth==0){
         this.familyDeadString.setVisible(true);
+=======
+        i ++;
+        money(i);
+        console.log("i: " + i);
+        this.text.setText(this.strings[i]);       
+    }
+
+    // get option text to show up on the correct index
+    if(i == 4){
+        console.log('option1: ' + option1);
+        // create the text and set it so it can be interacted with
+        if(typeof option1 == 'undefined' && typeof option2 == 'undefined'){
+            console.log('added the text');
+            createdText = true;
+            option1 = text("hunt gorillas",0,50).setVisible(true).setInteractive();
+            option1.setDepth(1);
+            
+            option2 = text("farm",500,50).setInteractive();
+            option2.setVisible(true);
+            option2.setDepth(1);
+        }
+        if(typeof option1 !== 'undefined' && typeof option2 !== 'undefined'){
+            option1.on('pointerdown', function(pointer){
+                console.log('clicked option one');
+                money(100);
+                i ++;
+                option1.setVisible(false);
+                option2.setVisible(false);
+                createdText = false;
+                console.log(createdText);
+            });
+            option2.on('pointerdown',function(pointer){
+                console.log('clicked option 2');
+                money(3);
+                i ++;
+                option1.setVisible(false);
+                option2.setVisible(false);
+            });
+        }
+>>>>>>> c7429af0fa64f0776416306a317eb0937da4803d
     }
 
 
