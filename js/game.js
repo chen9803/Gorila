@@ -1,13 +1,10 @@
 // create a new scene
 let gameScene = new Phaser.Scene('Game');
-<<<<<<< HEAD
-=======
 
 // extra variables
 // counter for text
 var i = 0;
 // check for options being visible
->>>>>>> c7429af0fa64f0776416306a317eb0937da4803d
 var createdText = false;
 var option1;
 var option2;
@@ -57,24 +54,10 @@ gameScene.create = function () {
     // change the sprite origin to the top-left corner
     this.bg.setOrigin(0,0);
     this.moneyString = gameScene.add.text(0,config.height-30,"Moneyz: " + this.money,this.style);
-<<<<<<< HEAD
     this.text = gameScene.add.text(0,0,this.strings[this.i], this.style);
     this.familyHealthString = gameScene.add.text(config.width-250,config.height-30,"Family Health: " + this.familyHealth,this.style);
     this.familyDeadString = gameScene.add.text(0,config.height-300,"Your family is dead", this.bigStyle);
     this.familyDeadString.setVisible(false);
-=======
-    this.text = gameScene.add.text(0,0,this.strings[i], this.style);
-
-    /*
-    // show and remove stuff
-    // Set text to pause game & hide it
-    pauseGameText = this.add.text(200, 200, 'Game Paused',{ fontFamily: 'Arial', fontSize: 64, color: '#fff'}).setVisible(false);
-
-    // Set the depth to 1
-    pauseGameText.setDepth(1);
-    */
-
->>>>>>> c7429af0fa64f0776416306a317eb0937da4803d
 };
 
 // ============ (4) update ==================
@@ -94,41 +77,6 @@ gameScene.update = function () {
     game.input.enabled = true;
     //check for active pointer 
     if(this.input.keyboard.checkDown(cursors.space, 5000)) {
-<<<<<<< HEAD
-        this.i ++;
-        this.money += this.i;
-        console.log("i: " + this.i);
-        console.log("Moneyz: " + this.money);
-        this.moneyString.setText("Moneyz: " + this.money);
-        this.text.setText(this.strings[this.i]);
-        if(this.i>=4){
-            this.familyHealth -= 1;
-        }
-        
-    }
-    // get option text to show up on the correct index
-    if(this.i == 4){
-        // create the text and set it so it can be interacted with
-        var option1 = text("hunt gorillas",0,50).setInteractive();
-        var option2 = text("farm",500,50).setInteractive();
-        var deadFamily = ("Your family is dead",0,0);
-        //deadFamily.setOrigin: 
-        option1.on('pointerdown',function(pointer){
-            console.log('clicked option one');
-            this.money = 100;
-            console.log("Moneyz: " + this.money);
-            this.i ++;
-        });
-        option2.on('pointerdown',function(pointer){
-            console.log('clicked option 2');
-            this.money += 3;
-            console.log("Moneyz: " + this.money);
-            this.i ++;
-            
-    })}
-    if(this.familyHealth==0){
-        this.familyDeadString.setVisible(true);
-=======
         i ++;
         money(i);
         console.log("i: " + i);
@@ -177,7 +125,6 @@ gameScene.update = function () {
                 }
             });
         }
->>>>>>> c7429af0fa64f0776416306a317eb0937da4803d
     }
 
 
@@ -190,6 +137,11 @@ function text(string,x,y){
     }
     return gameScene.add.text(0,config.height/2-10,string,gameScene.style);
 
+}
+
+function money(value){
+    gameScene.money += value;
+    gameScene.moneyString.setText("moneyz: " + gameScene.money);
 }
 
 //The maximum is inclusive and the minimum is inclusive 
