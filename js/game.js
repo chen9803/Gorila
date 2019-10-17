@@ -4,10 +4,16 @@ let gameScene = new Phaser.Scene('Game');
 // extra variables
 // counter for text
 var i = 0;
+// array for choices
+var choices = [4,5];
+// month counter
+var month = 1;
+// hunted gorilla counter
+var gorillaCounter = 0;
 // check for options being visible
 var createdText = false;
-var option1;
-var option2;
+var option1 = null;
+var option2 = null;
 // ============= (1) init ===================
 // init is the first function that is called. 
 // Initiate certain variables or objects for your scene here. 
@@ -21,8 +27,7 @@ gameScene.init = function (){
                     "this is the first month and you have to decide if you want to hunt gorillas or farm",
                     "",
                     "Will you now buy food and water for your family?",
-                    "ban",
-                    ""
+                    "Your family has survived for another day"
                    ];
     // style for all the text in the game and get it to wrap around the screen
     this.style = { font: '20pt Arial', fill: 'white', align: 'left', wordWrap:{width: config.width, useAdvancedWrap: true}};
@@ -64,30 +69,28 @@ gameScene.create = function () {
 // After setup is complete, update is called on a loop 
 // for each frame during game play.
 gameScene.update = function () {  
-    /*
-    // Pause game by pressing spacebar & resume by pressing shift
-    if(cursors.space.isDown){
-        // this.physics.pause();
-        pauseGameText.setVisible(true);
-        } else if (cursors.shift.isDown){
-        // this.physics.resume();
-        pauseGameText.setVisible(false);
-        }
-        */
     game.input.enabled = true;
     //check for active pointer 
-    if(this.input.keyboard.checkDown(cursors.space, 5000)) {
-        i ++;
-        money(i);
-        console.log("i: " + i);
-        this.text.setText(this.strings[i]);       
+    
+    if(typeof this.strings[i] !== 'undefined') {
+        if(this.input.keyboard.checkDown(cursors.space, 5000) && notChoice()){
+            i ++;
+            family(-1)
+            console.log("i: " + i);
+            this.text.setText(this.strings[i]);
+        }
+    }else{
+        i = 3;
+        month++;
+        this.text.setText("this is month " + month + ", and you need to decide if you want to farm or hunt gorillas");
+        console.log('i: ' + i);
     }
 
     // get option text to show up on the correct index
     if(i == 4){
         console.log('option1: ' + option1);
         // create the text and set it so it can be interacted with
-        if(typeof option1 == 'undefined' && typeof option2 == 'undefined'){
+        if(/*typeof option1 == 'undefined' && typeof option2 == 'undefined'*/ option1 == null && option2 == null){
             console.log('added the text');
             createdText = true;
             option1 = text("hunt gorillas",0,50).setVisible(true).setInteractive();
@@ -97,15 +100,18 @@ gameScene.update = function () {
             option2.setVisible(true);
             option2.setDepth(1);
         }
-        if(typeof option1 !== 'undefined' && typeof option2 !== 'undefined' && i == 4){
+        if(/*typeof option1 !== 'undefined' && typeof option2 !== 'undefined'*/ option1 != null && option2 != null && i == 4){
             option1.on('pointerdown', function(pointer){
                 if(i == 4){
                     console.log('clicked option one');
+                    gorillaCounter++;
                     money(100);
                     i ++;
                     console.log(i);
                     option1.setVisible(false);
+                    option1 = null;
                     option2.setVisible(false);
+                    option2 = null;
                     createdText = false;
                     // has to use gameScene.strings because this would refer to the text because we are inside the text reference
                     gameScene.text.setText(gameScene.strings[i]);
@@ -118,7 +124,9 @@ gameScene.update = function () {
                     i ++;
                     console.log(i);
                     option1.setVisible(false);
+                    option1 = null;
                     option2.setVisible(false);
+                    option2 = null;
                     createdText = false;
                     // has to use gameScene.strings because this would refer to the text because we are inside the text reference
                     gameScene.text.setText(gameScene.strings[i]);  
@@ -126,11 +134,63 @@ gameScene.update = function () {
             });
         }
     }
-
+        if(i == 5){
+            console.log('option1: ' + option1);
+            // create the text and set it so it can be interacted with
+            if(option1 == null && option2 == null){
+                console.log('added the text');
+                createdText = true;
+                option1 = text("buy food",0,50).setVisible(true).setInteractive();
+                option1.setDepth(1);
+                
+                option2 = text("starve them",500,50).setInteractive();
+                option2.setVisible(true);
+                option2.setDepth(1);
+            }
+            if(typeof option1 !== 'undefined' && typeof option2 !== 'undefined' && i == 5){
+                option1.on('pointerdown', function(pointer){
+                    if(i == 5){
+                        console.log('clicked option one');
+                        money(-10);
+                        family(5);
+                        i ++;
+                        console.log(i);
+                        option1.setVisible(false);
+                        option1 = null;
+                        option2.setVisible(false);
+                        option2 = null;
+                        createdText = false;
+                        // has to use gameScene.strings because this would refer to the text because we are inside the text reference
+                        gameScene.text.setText(gameScene.strings[i]);
+                    }
+                });
+                option2.on('pointerdown',function(pointer){
+                    if(i == 5){
+                        console.log('clicked option 2');
+                        money(-10);
+                        family(-2);
+                        i ++;
+                        console.log(i);
+                        option1.setVisible(false);
+                        option1 = null;
+                        option2.setVisible(false);
+                        option2 = null;
+                        createdText = false;
+                        // has to use gameScene.strings because this would refer to the text because we are inside the text reference
+                        gameScene.text.setText(gameScene.strings[i]);  
+                    }
+                });
+            }
+    }
 
 };
 
-//create text and return the object, can take in just a string or take in a string and its position
+// loop through the months choices until family health dies
+function timePass(){
+    
+}
+
+// create text and return the object, can take in just a string or take in a string and its position
 function text(string,x,y){
     if(typeof x !== 'undefined' && typeof y !== 'undefined'){
         return gameScene.add.text(x,y,string,gameScene.style);
@@ -138,10 +198,24 @@ function text(string,x,y){
     return gameScene.add.text(0,config.height/2-10,string,gameScene.style);
 
 }
-
+// check if it is the index of a choice
+function notChoice(){
+    for(let j = 0; j < choices.length; j++){
+        if(i == choices[j]){
+            return false;
+        }
+    }
+    return true;
+}
+function family(value){
+    gameScene.familyHealth += value;
+    gameScene.familyHealthString.setText("Family Health: " + gameScene.familyHealth);
+    return gameScene.familyHealth;
+}
 function money(value){
     gameScene.money += value;
     gameScene.moneyString.setText("moneyz: " + gameScene.money);
+    return gameScene.money;
 }
 
 //The maximum is inclusive and the minimum is inclusive 
