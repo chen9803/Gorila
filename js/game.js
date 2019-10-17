@@ -1,5 +1,6 @@
 // create a new scene
 let gameScene = new Phaser.Scene('Game');
+var snatched = ['false','false','false'];
 // extra variables
 // counter for text
 var i = 0;
@@ -11,6 +12,7 @@ var createdText = false;
 gameScene.init = function (){
     this.familyHealth = 5;
     this.money = 10;
+    this.traps = [];
     // array for all the different messages that will be displayed in the game
     this.strings = ["you are a simple villager who is trying to feed your family, and you can farm or go hunt gorillas",
                     "at the start of each month, you can chose to farm or hung gorillas to earn money",
@@ -50,6 +52,17 @@ gameScene.create = function () {
     this.bg.setOrigin(0,0);
     this.moneyString = gameScene.add.text(0,config.height-30,"Moneyz: " + this.money,this.style);
     this.text = gameScene.add.text(0,0,this.strings[i], this.style);
+    for (let i = 0; i < 3; i++){
+        let trap = this.add.sprite(5,5,'enemy');
+        trap.depth = 2;
+        trap.setInteractive();
+        trap.on('pointerdown', function(pointer){
+            alert('snached');
+            snatched[i] = true;
+        });
+        this.traps.push(trap);
+    }
+    console.log(this.traps);
 };
 
 // ============ (4) update ==================
@@ -64,12 +77,20 @@ gameScene.update = function () {
         console.log("i: " + i);
         this.text.setText(this.strings[i]);       
     }
+
+    for(let i = 0; i < 10; i++){
+        if(snatched[i]){
+            this.traps[i].destroy;
+        }
+    }
+    console.log(snatched);
+
     // get option text to show up on the correct index
     if(i == 4){
         // create the text and set it so it can be interacted with
         createdText = true;
-        // var option1 = text("hunt gorillas",0,50).setInteractive();
-        var option1 = this.add.text(x,y,string,this.style).setInteractive();
+        var option1 = text("hunt gorillas",0,50).setInteractive();
+        // var option1 = this.add.text(x,y,string,this.style).setInteractive();
         var option2 = text("farm",500,50).setInteractive();
         option1.on('pointerdown', function(pointer){
             console.log('clicked option one');
