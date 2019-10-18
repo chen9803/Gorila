@@ -10,6 +10,7 @@ var choices = [4,5];
 var month = 1;
 // hunted gorilla counter
 var gorillaCounter = 0;
+var message = null;
 // check for options being visible
 var createdText = false;
 var option1 = null;
@@ -18,11 +19,11 @@ var option2 = null;
 // init is the first function that is called. 
 // Initiate certain variables or objects for your scene here. 
 gameScene.init = function (){
-    this.familyHealth = 5;
+    this.familyHealth = 7;
     this.money = 10;
     // array for all the different messages that will be displayed in the game
     this.strings = ["you are a simple villager who is trying to feed your family, and you can farm or go hunt gorillas",
-                    "at the start of each month, you can chose to farm or hung gorillas to earn money",
+                    "at the start of each month, you can chose to farm or hunt gorillas to earn money",
                     "at the end of the month, you will spend your money to buy food",
                     "this is the first month and you have to decide if you want to hunt gorillas or farm",
                     "",
@@ -76,7 +77,7 @@ var gorillaWarning = null;
 gameScene.update = function () {  
     game.input.enabled = true;
     //check for active pointer 
-
+    console.log(i)
     if(gorillaCounter == 2 && !createdText && notChoice()){
         gorillaWarning = text("Hey, this is the government speaking, did you know that hunting gorillas are actually hurting the environment?",100,100).setVisible().setDepth(1);
         gorillaWarning.setDepth(1);
@@ -93,7 +94,7 @@ gameScene.update = function () {
             createdText = false;
         }
     }*/
-    if (this.familyHealth<=0){
+    if (this.familyHealth<=0 || this.money < 0){
         this.familyDeadString.setVisible(true);
         this.familyDeadString.setDepth(3);
         this.youLose.setDepth(2);
@@ -103,30 +104,39 @@ gameScene.update = function () {
             console.log('show message');
             this.familyDeadString.setVisible(false);
             this.add.displayList.removeAll();
-
-            var message = text('as you can see, even though gorillas are very important, both the needs of the gorillas and the villagers need to be taken into account in order for both to survive, and a balance between them achieved',config.width/2,config.height/2);
+            message = text('As you can see, even though gorillas are very important, both the needs of the gorillas and the villagers need to be taken into account in order for both to survive, and a balance between them achieved.',config.width/2,config.height/2);
             message.setOrigin(0.5,0.5);
             message.setDepth(4);
         }
+        /*if(message != null){
+            console.log('message shows');
+            if(this.input.keyboard.checkDown(cursors.space,5000)){
+                gameScene.scene.restart();
+            }
+        }
+        /*if(this.input.keyboard.checkDown(cursors.r) && message != null){
+            this.scene.restart();
+        }*/
     }
     
 
     if(typeof this.strings[i] !== 'undefined'/* && gorillaWarning == null*/) {
+        console.log('strings[i] is undefined');
         if(this.input.keyboard.checkDown(cursors.space, 5000) && notChoice()){
             i ++;
             console.log("i: " + i);
             console.log("your family's health: " + this.familyHealth);
             this.text.setText(this.strings[i]); 
-            if(i >= 4 && gorillaCounter >= 5){
+            if(i >= 4 && gorillaCounter > 10){
+                family(-(gorillaCounter-10));
+            }else if(i >= 4 && gorillaCounter > 2){
                 family(-2);
-            }else if(i >= 4 && gorillaCounter > 10){
-                family(-gorillaCounter);
             }else if(i >= 4){
                 family(-1);
             }
             this.text.setText(this.strings[i]);
         }
-    }else if(gorillaWarning == null){
+    }else{
         i = 3;
         month++;
         this.text.setText("this is month " + month + ", and you need to decide if you want to farm or hunt gorillas");
@@ -151,7 +161,7 @@ gameScene.update = function () {
                 if(i == 4){
                     console.log('clicked option one');
                     gorillaCounter++;
-                    money(100);
+                    money(12);
                     i ++;
                     console.log(i);
                     option1.setVisible(false);
@@ -186,7 +196,7 @@ gameScene.update = function () {
             if(option1 == null && option2 == null){
                 console.log('added the text');
                 createdText = true;
-                option1 = text("buy food",0,50).setVisible(true).setInteractive();
+                option1 = text("buy food: 10 moneyz",0,50).setVisible(true).setInteractive();
                 option1.setDepth(1);
                 
                 option2 = text("starve them",500,50).setInteractive();
@@ -213,7 +223,7 @@ gameScene.update = function () {
                 option2.on('pointerdown',function(pointer){
                     if(i == 5){
                         console.log('clicked option 2');
-                        money(-10);
+//                        money(-10);
                         family(-2);
                         i ++;
                         console.log(i);
