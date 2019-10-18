@@ -79,31 +79,24 @@ gameScene.update = function () {
     if(gorillaCounter == 10 && !createdText){
         warning = text("Hey, this is the government speaking, did you know that hunting gorillas are actually hurting the environment?")
     }
-
-    if(this.input.keyboard.checkDown(cursors.space, 5000)) {
-        i ++;
-        money(i);
-        console.log("i: " + i);
-        console.log("your family's health: " + this.familyHealth);
-        this.text.setText(this.strings[i]); 
-        if(i >= 4){
-            this.familyHealth -= 1;
-        }
-    }
     if (this.familyHealth<=0){
         this.familyDeadString.setVisible(true);
         this.familyDeadString.setDepth(3);
         this.youLose.setDepth(2);
         this.youLose.setVisible(true);
         console.log('you died')
-
+    }
     
 
     if(typeof this.strings[i] !== 'undefined') {
         if(this.input.keyboard.checkDown(cursors.space, 5000) && notChoice()){
             i ++;
-            family(-1)
             console.log("i: " + i);
+            console.log("your family's health: " + this.familyHealth);
+            this.text.setText(this.strings[i]); 
+            if(i >= 4){
+                family(-1);
+            }
             this.text.setText(this.strings[i]);
         }
     }else{
