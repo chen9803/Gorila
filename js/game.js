@@ -68,7 +68,8 @@ gameScene.create = function () {
     this.familyDeadString.setVisible(false);
     this.youLose.setVisible(false);
 };
-
+// string for gorilla warning
+var gorillaWarning = null;
 // ============ (4) update ==================
 // After setup is complete, update is called on a loop 
 // for each frame during game play.
@@ -76,35 +77,60 @@ gameScene.update = function () {
     game.input.enabled = true;
     //check for active pointer 
 
-    if(gorillaCounter == 10 && !createdText){
-        warning = text("Hey, this is the government speaking, did you know that hunting gorillas are actually hurting the environment?")
-    }
+    if(gorillaCounter == 2 && !createdText && notChoice()){
+        gorillaWarning = text("Hey, this is the government speaking, did you know that hunting gorillas are actually hurting the environment?",100,100).setVisible().setDepth(1);
+        gorillaWarning.setDepth(1);
+        console.log('you hunt 2 much gorila');
+        this.text.setText('');
+        createdText = true;
+    }/*else if(gorillaWarning != null && createdText){
+        console.log('ooga booga');
+        if(this.input.keyboard.checkDown(cursors.space, 5000)){
+            console.log('bleh');
+            gorillaWarning.setVisible(false);
+            gorillaWarning = null;
+            this.text.setText(this.strings[i]);
+            createdText = false;
+        }
+    }*/
     if (this.familyHealth<=0){
         this.familyDeadString.setVisible(true);
         this.familyDeadString.setDepth(3);
         this.youLose.setDepth(2);
         this.youLose.setVisible(true);
-        console.log('you died')
+        console.log('you died');
+        if(this.input.keyboard.checkDown(cursors.space, 5000)){
+            console.log('show message');
+            this.familyDeadString.setVisible(false);
+            this.add.displayList.removeAll();
+
+            var message = text('as you can see, even though gorillas are very important, both the needs of the gorillas and the villagers need to be taken into account in order for both to survive, and a balance between them achieved',config.width/2,config.height/2);
+            message.setOrigin(0.5,0.5);
+            message.setDepth(4);
+        }
     }
     
 
-    if(typeof this.strings[i] !== 'undefined') {
+    if(typeof this.strings[i] !== 'undefined'/* && gorillaWarning == null*/) {
         if(this.input.keyboard.checkDown(cursors.space, 5000) && notChoice()){
             i ++;
             console.log("i: " + i);
             console.log("your family's health: " + this.familyHealth);
             this.text.setText(this.strings[i]); 
-            if(i >= 4){
+            if(i >= 4 && gorillaCounter >= 5){
+                family(-2);
+            }else if(i >= 4 && gorillaCounter > 10){
+                family(-gorillaCounter);
+            }else if(i >= 4){
                 family(-1);
             }
             this.text.setText(this.strings[i]);
         }
-    }else{
+    }else if(gorillaWarning == null){
         i = 3;
         month++;
         this.text.setText("this is month " + month + ", and you need to decide if you want to farm or hunt gorillas");
         console.log('i: ' + i);
-
     }
     // get option text to show up on the correct index
     if(i == 4){
@@ -204,11 +230,6 @@ gameScene.update = function () {
     }
 
 };
-
-// loop through the months choices until family health dies
-function timePass(){
-    
-}
 
 // create text and return the object, can take in just a string or take in a string and its position
 function text(string,x,y){
