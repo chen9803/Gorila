@@ -45,6 +45,7 @@ gameScene.preload = function (){
     this.load.image('background', 'assets/background.png');
     this.load.image('enemy', 'assets/dragon.png');
     this.load.image('goal', 'assets/treasure.png');
+    this.load.image('deathScreen','assets/death.jpg');
 };
 
 // ============ (3) create ==================
@@ -56,6 +57,8 @@ gameScene.create = function () {
     //console.log(cursors);
     // create background sprite
     this.bg = this.add.sprite(0, 0, 'background');
+    this.youLose = this.add.sprite(0,0, 'deathScreen')
+    this.youLose.setOrigin(0,0);
     // change the sprite origin to the top-left corner
     this.bg.setOrigin(0,0);
     this.moneyString = gameScene.add.text(0,config.height-30,"Moneyz: " + this.money,this.style);
@@ -63,6 +66,7 @@ gameScene.create = function () {
     this.familyHealthString = gameScene.add.text(config.width-250,config.height-30,"Family Health: " + this.familyHealth,this.style);
     this.familyDeadString = gameScene.add.text(0,config.height-300,"Your family is dead", this.bigStyle);
     this.familyDeadString.setVisible(false);
+    this.youLose.setVisible(false);
 };
 
 // ============ (4) update ==================
@@ -71,9 +75,30 @@ gameScene.create = function () {
 gameScene.update = function () {  
     game.input.enabled = true;
     //check for active pointer 
+
     if(gorillaCounter == 10 && !createdText){
         warning = text("Hey, this is the government speaking, did you know that hunting gorillas are actually hurting the environment?")
     }
+
+    if(this.input.keyboard.checkDown(cursors.space, 5000)) {
+        i ++;
+        money(i);
+        console.log("i: " + i);
+        console.log("your family's health: " + this.familyHealth);
+        this.text.setText(this.strings[i]); 
+        if(i >= 4){
+            this.familyHealth -= 1;
+        }
+    }
+    if (this.familyHealth<=0){
+        this.familyDeadString.setVisible(true);
+        this.familyDeadString.setDepth(3);
+        this.youLose.setDepth(2);
+        this.youLose.setVisible(true);
+        console.log('you died')
+
+    
+
     if(typeof this.strings[i] !== 'undefined') {
         if(this.input.keyboard.checkDown(cursors.space, 5000) && notChoice()){
             i ++;
@@ -86,8 +111,8 @@ gameScene.update = function () {
         month++;
         this.text.setText("this is month " + month + ", and you need to decide if you want to farm or hunt gorillas");
         console.log('i: ' + i);
-    }
 
+    }
     // get option text to show up on the correct index
     if(i == 4){
         console.log('option1: ' + option1);
