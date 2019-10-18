@@ -71,7 +71,9 @@ gameScene.create = function () {
 gameScene.update = function () {  
     game.input.enabled = true;
     //check for active pointer 
-    
+    if(gorillaCounter == 10 && !createdText){
+        warning = text("Hey, this is the government speaking, did you know that hunting gorillas are actually hurting the environment?")
+    }
     if(typeof this.strings[i] !== 'undefined') {
         if(this.input.keyboard.checkDown(cursors.space, 5000) && notChoice()){
             i ++;
